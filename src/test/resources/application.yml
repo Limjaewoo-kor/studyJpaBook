@@ -1,0 +1,23 @@
+spring:
+#  datasource:
+#    url: jdbc:h2:mem:test   # 테스트쪽은 메모리 디비로 설정
+#    username: sa
+#    password:
+#    driver-class-name: org.h2.Driver
+#
+#
+#  jpa:
+#    hibernate:
+#      ddl-auto: create-drop
+#    properties:
+#      hibernate:
+##        show_sql: true   -> 시스템 아웃으로 출력한다  아래는 로그로 출력
+#        format_sql: true
+
+#스프링 부트는 위를 다 지우면 기본적으로 테스트 디비로 동작한다.
+
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type: trace
