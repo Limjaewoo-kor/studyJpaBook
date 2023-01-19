@@ -13,6 +13,7 @@ spring:
       hibernate:
 #        show_sql: true   -> 시스템 아웃으로 출력한다  아래는 로그로 출력
         format_sql: true
+        default_batch_fetch_size: 100
 
 
 logging:

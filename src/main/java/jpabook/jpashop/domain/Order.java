@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -26,6 +27,7 @@ public class Order {
     private Member member;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+//    @BatchSize(size = 1000)
     private List<OrderItem> orderItems = new ArrayList<>();
     //cascade = CascadeType.ALL 되어있으면 Order가 persist될때 CascadeType.ALL 되어있는 orderitem이나 delivery도 persist해줌
 
