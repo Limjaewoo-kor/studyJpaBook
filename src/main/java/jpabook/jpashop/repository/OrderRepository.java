@@ -121,10 +121,10 @@ public class OrderRepository {
     }
 
     private static BooleanExpression nameLike(String memberName) {
-        if(StringUtils.hasText(memberName)) {
+        if(!StringUtils.hasText(memberName)) {
             return null;
         }
-        return QMember.member.name.like(memberName);
+        return QMember.member.name.contains(memberName);
     }
 
     private BooleanExpression statusEq(OrderStatus statusCond) {
