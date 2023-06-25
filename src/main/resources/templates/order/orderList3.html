@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"/>
+<body>
+  <div class="border container-xl">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+      <div>
+
+        <table>
+          <span th:each="item : ${data}">
+            <p th:text="${item.getKey()}"></p>
+            <p th:text="${item.getValue()[0].name}"></p>
+            <p th:text="${item.getValue()[0].num}"></p>
+            <p th:text="${item.getValue()[1].name}"></p>
+            <p th:text="${item.getValue()[1].num}"></p>
+            <p th:text="${item.getValue()[2].name}"></p>
+            <p th:text="${item.getValue()[2].num}"></p>
+          </span>
+        </table>
+    </div>
+    <div th:replace="fragments/footer :: footer"/>
+  </div> <!-- /container -->
+</body>
+<script>
+  function cancel(id) {
+    // var form = document.createElement("form");
+    // form.setAttribute("method", "post");
+    // form.setAttribute("action", "/orders/" + id + "/cancel");
+    // document.body.appendChild(form);
+    // form.submit();
+  }
+</script>
+</html>

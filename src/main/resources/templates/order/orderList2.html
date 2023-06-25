@@ -6,19 +6,19 @@
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
       <div>
         <div>
-          <form th:object="${orderSearch}" class="form-inline">
+          <form th:object="${orderGongSearch}" class="form-inline">
             <div class="form-group mb-2">
-              <input type="text" th:field="*{memberName}" class="form-control" placeholder="회원명"/>
+              <input type="text" th:field="*{stationName}" class="form-control" placeholder="시도명"/>
             </div>
-            <div class="form-group mx-sm-1 mb-2">
-              <select th:field="*{orderStatus}" class="form-control">
-                <option value="">주문상태</option>
-                <option th:each="status : ${T(jpabook.jpashop.domain.OrderStatus).values()}"
-                        th:value="${status}"
-                        th:text="${status}">option
-                </option>
-              </select>
-            </div>
+<!--            <div class="form-group mx-sm-1 mb-2">-->
+<!--              <select th:field="*{orderStatus}" class="form-control">-->
+<!--                <option value="">주문상태</option>-->
+<!--                <option th:each="status : ${T(jpabook.jpashop.domain.OrderStatus).values()}"-->
+<!--                        th:value="${status}"-->
+<!--                        th:text="${status}">option-->
+<!--                </option>-->
+<!--              </select>-->
+<!--            </div>-->
             <button type="submit" class="btn btn-primary mb-2">검색</button>
           </form>
       </div>
@@ -45,7 +45,7 @@
           </tr>
         </thead>
         <tbody>
-        <tr th:each="item : ${data.items}">
+        <tr th:each="item : ${data}">
           <td th:text="${item.sidoName}"></td>
           <td th:text="${item.stationName}"></td>
           <td th:text="${item.dataTime}"></td>
