@@ -1,7 +1,11 @@
 package jpabook.jpashop.api;
 
+import jpabook.jpashop.domain.Response;
 import jpabook.jpashop.repository.OrderGongSearch;
+import jpabook.jpashop.service.ApiService;
+import jpabook.jpashop.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jdom2.JDOMException;
 import org.json.JSONException;
 import org.json.simple.JSONArray;
@@ -14,22 +18,37 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.json.XML;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class GongDataApiController {
+
+    private final ApiService apiService;
 
     @GetMapping("/api/gong")
     public String gong(@ModelAttribute("orderGongSearch") OrderGongSearch orderGongSearch , Model model) throws IOException, ParseException {
         StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty"); /*URL*/
-        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=IGLNwNbAktZ5f4hZmOPJ41%2F%2BL3feqcuaATAkJu%2F44zPZiKxpG0zvoriIjyzvQFWpAuvrWIigpK43o0Z0yoHZhw%3D%3D"); /*Service Key*/
         urlBuilder.append("&" + URLEncoder.encode("returnType","UTF-8") + "=" + URLEncoder.encode("json", "UTF-8")); /*xml 또는 json*/
         urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("100", "UTF-8")); /*한 페이지 결과 수*/
         urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*페이지번호*/
@@ -81,31 +100,24 @@ public class GongDataApiController {
     }
 
     @GetMapping("/api/gongsil")
-    public String gongsil(@ModelAttribute("orderGongSearch") OrderGongSearch orderGongSearch , Model model) throws IOException, ParseException, JDOMException, JSONException {
+    public String gongsil(@ModelAttribute("orderGongSearch") OrderGongSearch orderGongSearch , Model model) throws IOException, ParseException, JDOMException, JSONException, SAXException, ParserConfigurationException {
         StringBuilder urlBuilder = new StringBuilder("http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev"); /*URL*/
-        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=IGLNwNbAktZ5f4hZmOPJ41%2F%2BL3feqcuaATAkJu%2F44zPZiKxpG0zvoriIjyzvQFWpAuvrWIigpK43o0Z0yoHZhw%3D%3D"); /*Service Key*/
         urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*페이지번호*/
-        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("10", "UTF-8")); /*한 페이지 결과 수*/
+        urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("100", "UTF-8")); /*한 페이지 결과 수*/
         urlBuilder.append("&" + URLEncoder.encode("LAWD_CD","UTF-8") + "=" + URLEncoder.encode("11110", "UTF-8")); /*지역코드*/
-        urlBuilder.append("&" + URLEncoder.encode("DEAL_YMD","UTF-8") + "=" + URLEncoder.encode("201512", "UTF-8")); /*계약월*/
+        urlBuilder.append("&" + URLEncoder.encode("DEAL_YMD","UTF-8") + "=" + URLEncoder.encode("202305", "UTF-8")); /*계약월*/
 
-        //url 연결
         URL url = new URL(urlBuilder.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Content-type", "application/json");
         System.out.println("Response code: " + conn.getResponseCode());
-
         BufferedReader rd;
         if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
             rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         } else {
             rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
         }
-
-
-
         StringBuilder sb = new StringBuilder();
         String line;
         while ((line = rd.readLine()) != null) {
@@ -113,26 +125,30 @@ public class GongDataApiController {
         }
         rd.close();
         conn.disconnect();
-        String result = sb.toString();
-//        System.out.println(sb.toString());
+        // String 형식의 xml
+        String xml = sb.toString();
 
-        // 1. 문자열 형태의 JSON을 파싱하기 위한 JSONParser 객체 생성.
-        JSONParser parser = new JSONParser();
-        // 2. 문자열을 JSON 형태로 JSONObject 객체에 저장.
-//        JSONObject obj = (JSONObject)parser.parse(result);
-        org.json.JSONObject obj = XML.toJSONObject(result);
+        // String 형식의 xml을 Java Object인 Response로 변환
+        Map<String, Response> result = new HashMap<>();
+        try{
+            JAXBContext jaxbContext = JAXBContext.newInstance(Response.class);
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            Response apiResponse = (Response)unmarshaller.unmarshal(new StringReader(xml));
+            result.put("response",apiResponse);
+            Response.Body.Items items = apiResponse.getBody().getItems();
 
-//        String aa = obj.toString(4);
-//        System.out.println(aa);
 
-        org.json.JSONObject responseResult = (org.json.JSONObject) obj.get("response");
-        org.json.JSONObject bodyResult = (org.json.JSONObject) responseResult.get("body");
-        org.json.JSONObject itemsResult = (org.json.JSONObject) bodyResult.get("items");
-        org.json.JSONArray itemResult = (org.json.JSONArray) itemsResult.get("item");
-//            JSONObject itemResult = (JSONObject)itemsResult.get("item");
+            log.info("item을 확인하겠습니다.");
+            for(Response.Body.Items.Item item : items.getItem()){
+//                log.info("아파트 " + item.get아파트());
+                apiService.join(item);
+            }
+            log.info("실행 완료!");
 
-        for (int i = 0; i < itemResult.length(); i++) {
-            System.out.println( i + "번째 데이터 = " + itemResult.get(i)) ;
+            model.addAttribute("data",items.getItem());
+
+        }catch (JAXBException e){
+            e.printStackTrace();
         }
 
         return "order/orderList3";

@@ -38,10 +38,13 @@ dependencies {
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5'
     implementation 'net.pwall.json:json-simple:1.7.3'
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+	implementation 'org.json:org.json:chargebee-1.0'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	implementation group: 'org.jdom', name: 'jdom2', version: '2.0.6.1'
 
 	//querydsl 추가
 	implementation 'com.querydsl:querydsl-jpa'
