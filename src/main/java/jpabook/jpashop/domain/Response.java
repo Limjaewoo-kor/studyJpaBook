@@ -71,9 +71,9 @@ public class Response {
                 @XmlElement(name="아파트")
                 private String aptName;
 
-//                @Getter
-//                @XmlElement(name="지번")
-//                private String address;
+                @Getter
+                @XmlElement(name="지번")
+                private String address;
 
                 @Getter
                 @XmlElement(name="도로명")
