@@ -1,9 +1,11 @@
 package jpabook.jpashop.api;
 
 import jpabook.jpashop.domain.Response;
+import jpabook.jpashop.domain.ResponseOutInterface;
+import jpabook.jpashop.repository.OrderApiSearch;
 import jpabook.jpashop.repository.OrderGongSearch;
 import jpabook.jpashop.service.ApiService;
-import jpabook.jpashop.service.MemberService;
+import jpabook.jpashop.service.GongDataApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jdom2.JDOMException;
@@ -17,15 +19,11 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.json.XML;
-import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -46,9 +44,13 @@ public class GongDataApiController {
 
     private final ApiService apiService;
 
+    private final GongDataApiService gongDataApiService;
+
+
     @GetMapping("/api/gong")
     public String gong(@ModelAttribute("orderGongSearch") OrderGongSearch orderGongSearch , Model model) throws IOException, ParseException {
         StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty"); /*URL*/
+        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + serviceKey); /*Service Key*/
         urlBuilder.append("&" + URLEncoder.encode("returnType","UTF-8") + "=" + URLEncoder.encode("json", "UTF-8")); /*xml 또는 json*/
         urlBuilder.append("&" + URLEncoder.encode("numOfRows","UTF-8") + "=" + URLEncoder.encode("100", "UTF-8")); /*한 페이지 결과 수*/
         urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*페이지번호*/
@@ -99,7 +101,7 @@ public class GongDataApiController {
         return "order/orderList2";
     }
 
-    @GetMapping("/api/gongsil")
+    @GetMapping("/api/gongsil2")
     public void gongsil(@ModelAttribute("orderGongSearch") OrderGongSearch orderGongSearch , Model model) throws IOException, ParseException, JDOMException, JSONException, SAXException, ParserConfigurationException {
         List<String> lawdTmpList = new ArrayList<>();
         lawdTmpList.add("11680");
@@ -353,9 +355,11 @@ public class GongDataApiController {
         lawdTmpList.add("50130");
         lawdTmpList.add("50110");
         String LAWD_CD ="";
-        for (int i = 0; i < lawdTmpList.size(); i++) {
+//        for (int i = 0; i < lawdTmpList.size(); i++) {
+        for (int i = 0; i < 3; i++) {
             LAWD_CD = lawdTmpList.get(i);
             StringBuilder urlBuilder = new StringBuilder("http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev"); /*URL*/
+            urlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8") + serviceKey); /*Service Key*/
             urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*페이지번호*/
             urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode("10000", "UTF-8")); /*한 페이지 결과 수*/
             urlBuilder.append("&" + URLEncoder.encode("LAWD_CD", "UTF-8") + "=" + URLEncoder.encode(LAWD_CD, "UTF-8")); /*지역코드*/
@@ -393,7 +397,8 @@ public class GongDataApiController {
 
 
                 log.info("item을 확인하겠습니다.");
-                for (Response.Body.Items.Item item : items.getItem()) {
+
+                for (Response.Body.Items.aptItem item : items.getItem()) {
 //                log.info("아파트 " + item.get아파트());
                     apiService.join(item);
                 }
@@ -406,6 +411,22 @@ public class GongDataApiController {
             }
         }
 //        return "order/orderList3";
+    }
+
+
+    @GetMapping("/api/gongsil")
+    public String gongsil2(@ModelAttribute("orderApiSearch") OrderApiSearch orderApiSearch , Model model) throws IOException, ParseException, JDOMException, JSONException, SAXException, ParserConfigurationException {
+        String stationName = orderApiSearch.getStationName();
+        if (null == stationName){
+            List<ResponseOutInterface> allFind = gongDataApiService.findAll2();
+            model.addAttribute("data",allFind);
+        } else {
+            List<ResponseOutInterface> allFind = gongDataApiService.findWhere(stationName);
+            model.addAttribute("data",allFind);
+        }
+
+
+        return "order/orderList3";
     }
 
 

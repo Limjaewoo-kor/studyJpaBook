@@ -3,10 +3,7 @@ package jpabook.jpashop.domain;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -43,11 +40,12 @@ public class Response {
         @Setter
         @XmlRootElement(name = "items")
         public static class Items{
-            private List<Item> item;
+            private List<aptItem> item;
 
             @XmlRootElement(name="item")
-            @Entity
-            public static class Item{
+            @Entity(name = "AptItem")
+            @Table(name = "AptItem")
+            public static class aptItem{
 
                 @Id
                 @GeneratedValue
@@ -72,12 +70,16 @@ public class Response {
                 private String aptName;
 
                 @Getter
-                @XmlElement(name="지번")
+                @XmlElement(name="법정동")
                 private String address;
 
                 @Getter
-                @XmlElement(name="도로명")
+                @XmlElement(name="지번")
                 private String address2;
+
+                @Getter
+                @XmlElement(name="도로명")
+                private String streetAddress;
 
                 @Getter
                 @XmlElement(name="건축년도")

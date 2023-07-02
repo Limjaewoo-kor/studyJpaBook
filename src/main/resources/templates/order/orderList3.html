@@ -41,19 +41,19 @@
   <div th:replace="fragments/bodyHeader :: bodyHeader"/>
   <div>
     <div>
-      <form th:object="${orderGongSearch}" class="form-inline">
+      <form th:object="${orderApiSearch}" class="form-inline">
         <div class="form-group mb-2">
-<!--          <input type="text" th:field="*{stationName}" class="form-control" placeholder="시도명"/>-->
+          <input type="text" th:field="*{stationName}" class="form-control" placeholder="시도명"/>
         </div>
-        <!--            <div class="form-group mx-sm-1 mb-2">-->
-        <!--              <select th:field="*{orderStatus}" class="form-control">-->
-        <!--                <option value="">주문상태</option>-->
-        <!--                <option th:each="status : ${T(jpabook.jpashop.domain.OrderStatus).values()}"-->
-        <!--                        th:value="${status}"-->
-        <!--                        th:text="${status}">option-->
-        <!--                </option>-->
-        <!--              </select>-->
-        <!--            </div>-->
+<!--                    <div class="form-group mx-sm-1 mb-2">-->
+<!--                      <select th:field="*{orderStatus}" class="form-control">-->
+<!--                        <option value="">주문상태</option>-->
+<!--                        <option th:each="status : ${T(jpabook.jpashop.domain.OrderStatus).values()}"-->
+<!--                                th:value="${status}"-->
+<!--                                th:text="${status}">option-->
+<!--                        </option>-->
+<!--                      </select>-->
+<!--                    </div>-->
         <button type="submit" class="btn btn-primary mb-2">검색</button>
       </form>
         <button onclick="sizeTypeClick()" type="submit" class="btn btn-primary mb-2" style="float: right">평/m2</button>
@@ -64,47 +64,48 @@
 <!--        <th>도로명건물부번호코드</th>-->
 <!--        <th>법정동지번코드</th>-->
 <!--        <th>지역코드</th>-->
-        <th>년</th>
-        <th>월</th>
-        <th>일</th>
+<!--        <th>년</th>-->
+<!--        <th>월</th>-->
+<!--        <th>일</th>-->
+        <th width="11%">일시</th>
 <!--        <th>도로명시군구코드</th>-->
 <!--        <th>도로명일련번호코드</th>-->
-        <th>아파트</th>
+        <th width="13%">아파트</th>
 <!--        <th>도로명지상지하코드</th>-->
-<!--        <th>지번</th>-->
-        <th>도로명</th>
+        <th width="5%">지번</th>
+        <th width="9%">도로명주소</th>
 <!--        <th>법정동읍면동코드</th>-->
 <!--        <th>법정동시군구코드</th>-->
-        <th>건축년도</th>
-          <th>전용면적(m2)</th>
-          <th>전용면적(평)</th>
-        <th>층</th>
+        <th width="5%">건축년도</th>
+          <th width="8%">전용면적(㎡)</th>
+          <th width="8%">전용면적(평)</th>
+        <th width="5%">층</th>
 <!--        <th>법정동</th>-->
 <!--        <th>일련번호</th>-->
-        <th>거래유형</th>
-        <th>거래금액</th>
+        <th width="5%">거래유형</th>
+        <th width="10%">거래금액</th>
 <!--        <th>도로명코드</th>-->
 <!--        <th>법정동본번코드</th>-->
 <!--        <th>법정동부번코드</th>-->
 <!--        <th>도로명코드</th>-->
-        <th>해제여부</th>
-        <th>해제사유발생일</th>
-        <th>중개사소재지</th>
+        <th width="5%">해제여부</th>
+        <th width="9%">해제사유발생일</th>
+        <th width="8%">중개사소재지</th>
 <!--        <th>도로명건물본번호코드</th>-->
       </tr>
       </thead>
       <tbody>
       <tr th:each="item : ${data}">
-        <td th:text="${item.year}"></td>
-        <td th:text="${item.month}"></td>
-        <td th:text="${item.day}"></td>
+<!--        <td th:text="${item.year}"></td>-->
+<!--        <td th:text="${item.month}"></td>-->
+<!--        <td th:text="${item.day}"></td>-->
+          <td th:text="${item.days}"></td>
         <td th:text="${item.aptName}"></td>
-<!--        <td th:text="${item.address}"></td>-->
-        <td th:text="${item.address2}"></td>
+        <td th:text="${item.address}"></td>
+        <td th:text="${item.streetAddress}"></td>
         <td th:text="${item.completedYear}"></td>
           <td th:text="${item.size}"></td>
-          <td th:text="${#numbers.formatInteger(item.size ,0)}"></td>
-          <td th:text="${item.size} / 3.3"></td>
+          <td th:text="${item.size2}"></td>
         <td th:text="${item.floor}"></td>
         <td th:text="${item.type}"></td>
         <td th:text="${item.price}"></td>

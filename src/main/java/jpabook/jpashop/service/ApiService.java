@@ -14,7 +14,7 @@ public class ApiService {
     private final ApiRepository apiRepository;
     //회원가입
     @Transactional
-    public String join(Response.Body.Items.Item item) {
+    public String join(Response.Body.Items.aptItem item) {
 
         apiRepository.save(item);
         return item.getAptName();
