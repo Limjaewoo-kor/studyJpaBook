@@ -13,5 +13,5 @@ H2DataBase -
 <img width="1547" alt="미세먼지캡처" src="https://github.com/Limjaewoo-kor/studyJpaBook/assets/68491295/fb6f205a-13cf-4c71-82d6-2f41f8b48c34">
 
 메인화면 - 
-<img width="820" alt="스크린샷 2023-03-22 오후 10 22 30" src="https://github.com/Limjaewoo-kor/studyJpaBook/assets/68491295/1414be1d-9f55-4811-957a-4cc1e3e3ca14">
+<img width="1792" alt="스크린샷 2023-07-03 오후 1 14 58" src="https://github.com/Limjaewoo-kor/studyJpaBook/assets/68491295/acdeac7a-432e-445e-a445-09726d953480">
 
