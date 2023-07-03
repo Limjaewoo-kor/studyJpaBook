@@ -3,7 +3,7 @@ SpringBoot , JPA , Thymeleaf , H2DataBase 사용하여 제작하였습니다.
 실거래가 API - 
 <img width="1792" alt="실거래가캡처" src="https://github.com/Limjaewoo-kor/studyJpaBook/assets/68491295/609a4ac8-4b0b-4d42-9496-d00e1547e47d">
 
-검색기능 - 
+도로명주소_검색기능 - 
 <img width="1792" alt="실거래가검색캡처" src="https://github.com/Limjaewoo-kor/studyJpaBook/assets/68491295/4b7f1888-37d7-4362-b93d-64b4a66fce2f">
 
 H2DataBase - 
